@@ -31,7 +31,6 @@ class Order
 
     if @order_condition.sell?
       sell
-      puts 'End'
     else
       puts 'Do not Sell ============'
     end

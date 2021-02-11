@@ -9,9 +9,9 @@ class OrderCondition
   def initialize(price, db_client)
     data = price['data']
     puts "ticker: #{data}"
-    @sell_price = data['sell'].to_i
-    @buy_price = data['buy'].to_i
-    @last_price = data['last'].to_i
+    @sell_price = data['sell'].to_f
+    @buy_price = data['buy'].to_f
+    @last_price = data['last'].to_f
 
     @db_client = db_client
     @last_history = last_history
@@ -64,6 +64,6 @@ class OrderCondition
 
   def sell_btc_amount
     # 前回買った btc を売る
-    @last_history['amount'].to_i if @last_history['side'] == 'buy'
+    @last_history['amount'].to_f if @last_history['side'] == 'buy'
   end
 end

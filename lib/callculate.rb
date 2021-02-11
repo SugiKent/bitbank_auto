@@ -25,7 +25,7 @@ module Callculate
     # weekly_prices は created_at で昇順で渡ってくる
     # 10_080 件取得しているため、一旦降順にして先頭（最も直近）から取得して、再度昇順に戻す
     data = weekly_prices.reverse[0..(count - 1)].reverse
-    prices = data.map { |price| price[type]&.to_i }.compact
+    prices = data.map { |price| price[type]&.to_f }.compact
     reg_line(prices.count, prices)
   end
 

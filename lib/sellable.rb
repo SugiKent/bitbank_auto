@@ -15,10 +15,13 @@ class Sellable
   def check_regs(weekly_prices)
     last_10minutes = calc_reg(weekly_prices, 10, 'sell')
     last_3days = calc_reg(weekly_prices, 4320, 'sell')
+    last_7days = calc_reg(weekly_prices, 10_080, 'buy')
 
     puts "last_10minutes: #{last_10minutes}"
     puts "last_3days: #{last_3days}"
+    puts "last_7days: #{last_7days}"
 
-    compare_slope(last_3days, '3days', last_10minutes, '10minutes', 0.8)
+    compare_slope(last_3days, '3days', last_7days, '7days', 0.8) &&
+      compare_slope(last_3days, '3days', last_10minutes, '10minutes', 0.8)
   end
 end
