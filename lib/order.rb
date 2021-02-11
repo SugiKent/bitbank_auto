@@ -1,18 +1,22 @@
 # frozen_string_literal: true
 
 require 'ruby_bitbankcc'
+require 'dotenv/load'
 
 require './lib/order_condition'
 require './lib/db'
+require './lib/firestore'
 
 class Order
   KEY = ENV['BITBANK_AUTO_KEY']
   SECRET = ENV['BITBANK_AUTO_SECRET']
 
   def initialize
+    puts "#{Time.new} ===================="
     @client = Bitbankcc.new(KEY, SECRET)
     @order_condition = nil
     @db_client = DB.new
+    @firestore_client = FirestoreClient.new
   end
 
   def execute!
@@ -21,8 +25,15 @@ class Order
 
     if @order_condition.buy?
       buy
-    elsif @order_condition.sell?
+    else
+      puts 'Do not Buy ============'
+    end
+
+    if @order_condition.sell?
       sell
+      puts 'End'
+    else
+      puts 'Do not Sell ============'
     end
 
     puts 'End'
@@ -47,6 +58,7 @@ class Order
     }
 
     @db_client.insert(:histories, transaction)
+    @firestore_client.write_history(transaction)
   end
 
   def sell
@@ -60,5 +72,6 @@ class Order
     }
 
     @db_client.insert(:histories, transaction)
+    @firestore_client.write_history(transaction)
   end
 end

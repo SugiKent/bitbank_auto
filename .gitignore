@@ -3,3 +3,6 @@ vendor
 db
 metabase-data
 .bundle
+.env
+bitbank-auto-*.json
+cron_log.log
