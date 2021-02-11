@@ -16,6 +16,7 @@ class FirestoreClient
   end
 
   def write_history(data)
+    data = data.merge!({ created_at: Time.new })
     @histories_db.doc(Time.new).set(data)
   end
 end
