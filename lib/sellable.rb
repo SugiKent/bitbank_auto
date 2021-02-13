@@ -5,11 +5,11 @@ require './lib/callculate'
 class Sellable
   include Callculate
 
-  def should_sell?(weekly_prices, last_history)
+  def should_sell?(weekly_prices, last_history, sell_price)
     return true if check_regs(weekly_prices)
 
     # 損切り
-    return true if last_history['price'] < @sell_price * 0.85
+    return true if last_history['price'] < sell_price * 0.85
   end
 
   def check_regs(weekly_prices)

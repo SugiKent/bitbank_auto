@@ -26,7 +26,7 @@ class OrderCondition
   def sell?
     puts "sell? ================\n"
     return false unless last_is_buy?
-    return true if Sellable.new.should_sell?(weekly_prices, @last_history)
+    return true if Sellable.new.should_sell?(weekly_prices, @last_history, @sell_price)
   end
 
   def weekly_prices
