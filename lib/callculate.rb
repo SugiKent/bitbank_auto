@@ -29,12 +29,12 @@ module Callculate
     reg_line(prices.count, prices)
   end
 
-  def compare_slope(small, small_name, big, big_name, by)
+  def compare_slope(small, small_name, big, big_name, big_by: 1, small_by: 1)
     puts 'compare slope'
     slope_small = small[:slope]
     slope_big = big[:slope]
-    puts "#{small_name} < #{big_name} * #{by}"
-    puts "#{slope_small} < #{slope_big * by}"
-    slope_small < slope_big * by
+    puts "#{small_name} * #{small_by} < #{big_name} * #{big_by}"
+    puts "#{slope_small * small_by} < #{slope_big * big_by}"
+    slope_small * small_by < slope_big * big_by
   end
 end
