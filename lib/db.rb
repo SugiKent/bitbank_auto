@@ -15,12 +15,12 @@ class DB
   end
 
   def get_tickers(limit: 500)
-    # -1 は昇順
-    @client[:tickers].find.sort(created_at: 1).limit(limit)
+    # -1 は降順
+    @client[:tickers].find.sort(created_at: -1).limit(limit)
   end
 
   def get_histories(limit: 10)
-    # -1 は昇順
-    @client[:histories].find.sort(created_at: 1).limit(limit)
+    # -1 は降順
+    @client[:histories].find.sort(created_at: -1).limit(limit)
   end
 end

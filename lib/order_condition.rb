@@ -34,7 +34,7 @@ class OrderCondition
   end
 
   def last_history
-    last = histories.last
+    last = histories.first
     puts "last_history: #{last}"
     last
   end
