@@ -6,6 +6,8 @@ class Sellable
   include Callculate
 
   def should_sell?(weekly_prices, last_history, sell_price)
+    # 買ったときよりも高い値段で売る
+    return false if last_history['price'] > sell_price
     return true if check_regs(weekly_prices)
 
     # 損切り
@@ -21,11 +23,9 @@ class Sellable
     puts "last_3days: #{last_3days}"
     puts "last_7days: #{last_7days}"
 
-    compare_slope(last_3days, '3days',
-                  last_7days, '7days',
-                  big_by: 1, small_by: 1) &&
-      compare_slope(last_3days, '3days',
-                    last_1hour, '1hour',
-                    big_by: 1, small_by: 1)
+    compare_slope(small: last_7days, small_name: '7days', small_by: 2,
+                  big: last_3days, big_name: '3days', big_by: 1) &&
+      compare_slope(small: last_1hour, small_name: '1hour', small_by: 1,
+                    big: last_3days, big_name: '3days', big_by: 1)
   end
 end

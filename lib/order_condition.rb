@@ -1,12 +1,14 @@
 # frozen_string_literal: true
+require 'dotenv/load'
 
 require './lib/buyable'
 require './lib/sellable'
 
 class OrderCondition
   AMOUNT_YEN = 3000
+  IS_PRODUCTION = ENV['IS_PRODUCTION'] == 'true' || false
 
-  def initialize(price, db_client)
+  def initialize(price, db_client, assets)
     data = price['data']
     puts "ticker: #{data}"
     @sell_price = data['sell'].to_f
@@ -15,16 +17,17 @@ class OrderCondition
 
     @db_client = db_client
     @last_history = last_history
+    @assets = assets
   end
 
   def buy?
-    puts "buy? ================\n"
+    puts "[Buy?] ================\n"
     return false if last_is_buy?
     return true if Buyable.new.should_buy?(weekly_prices)
   end
 
   def sell?
-    puts "sell? ================\n"
+    puts "[Sell?] ================\n"
     return false unless last_is_buy?
     return true if Sellable.new.should_sell?(weekly_prices, @last_history, @sell_price)
   end
@@ -51,19 +54,39 @@ class OrderCondition
   end
 
   def buy_yen
-    @buy_price * 0.995 # 300万なら 2,985,000
+    @buy_price * 0.999 # 300万なら 2,997,000
   end
 
   def buy_btc_amount
-    AMOUNT_YEN / buy_yen # 300万なら 0.001005025
+    amount = AMOUNT_YEN / buy_yen # 300万なら 0.001005025
+    amount.to_d.floor(8).to_f
   end
 
   def sell_yen
-    @sell_price * 1.003 # 300万なら 3,009,000
+    @sell_price * 1.001 # 300万なら 3,003,000
   end
 
   def sell_btc_amount
+    # development mode の時は last_history を見て額を決める
+    if !IS_PRODUCTION
+      return @last_history['amount'].to_d.floor(8).to_f
+    end 
+
     # 前回買った btc を売る
-    @last_history['amount'].to_f if @last_history['side'] == 'buy'
+    free_amount = btc_asset['free_amount'].to_d.floor(8).to_f
+    return free_amount if free_amount > 0
+
+    return 0
+  end
+
+  def btc_asset
+    btc = nil
+    @assets['data']['assets'].each do |a|
+      if a['asset'] == 'btc'
+        btc = a
+      end
+    end
+
+    btc
   end
 end

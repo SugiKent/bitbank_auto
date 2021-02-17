@@ -18,11 +18,11 @@ class Buyable
     puts "last_3days: #{last_3days}"
     puts "last_7days: #{last_7days}"
 
-    compare_slope(last_7days, '7days',
-                  last_1hour, '1hour',
-                  big_by: 2, small_by: -0.5) &&
-      compare_slope(last_3days, '3days',
-                    last_1hour, '1hour',
-                    big_by: 2, small_by: -1)
+    compare_slope(small: last_3days, small_name: '3days', small_by: 1.5,
+                  big: last_7days, big_name: '7days', big_by: 1) &&
+    compare_slope(small: last_7days, small_name: '7days', small_by: -1,
+                  big: last_1hour, big_name: '1hour', big_by: 1) &&
+      compare_slope(small: last_3days, small_name: '3days', small_by: 1.5,
+                    big: last_1hour, big_name: '1hour', big_by: 1)
   end
 end
