@@ -30,11 +30,11 @@ module Callculate
   end
 
   def compare_slope(small: nil, small_name: nil, small_by: 1, big: nil, big_name: nil, big_by: 1)
-    puts '[Compare Slope]'
+    @log << '[Compare Slope]'
     slope_small = small[:slope]
     slope_big = big[:slope]
-    puts "#{small_name} * #{small_by} < #{big_name} * #{big_by}"
-    puts "#{slope_small * small_by} < #{slope_big * big_by}"
+    @log << "#{small_name} * #{small_by} < #{big_name} * #{big_by}"
+    @log << "#{slope_small * small_by} < #{slope_big * big_by}"
     slope_small * small_by < slope_big * big_by
   end
 end

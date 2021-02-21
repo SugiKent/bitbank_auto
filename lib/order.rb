@@ -6,6 +6,7 @@ require 'dotenv/load'
 require './lib/order_condition'
 require './lib/db'
 require './lib/firestore'
+require './lib/line'
 
 class Order
   KEY = ENV['BITBANK_AUTO_KEY']
@@ -13,33 +14,41 @@ class Order
   IS_PRODUCTION = ENV['IS_PRODUCTION'] == 'true' || false
 
   def initialize
-    puts "[#{Time.new}] ===================="
+    @log = []
+    @log << "[#{Time.new}] ===================="
     @client = Bitbankcc.new(KEY, SECRET)
     @order_condition = nil
     @db_client = DB.new
     @firestore_client = FirestoreClient.new
     @assets = nil
+    @line = Line.new
   end
 
   def execute!
-    puts 'Start'
-    puts "environment: #{IS_PRODUCTION ? 'production' : 'development'}"
+    @log << 'Start'
+    @log << "environment: #{IS_PRODUCTION ? 'production' : 'development'}"
     assets = fetch_assets
-    @order_condition = OrderCondition.new(fetch_btc_price, @db_client, assets)
+    @order_condition = OrderCondition.new(fetch_btc_price, @db_client, assets, @log)
 
     if @order_condition.buy?
       buy
     else
-      puts '[Do not Buy]'
+      @log << '[Do not Buy]'
     end
 
     if @order_condition.sell?
       sell
     else
-      puts '[Do not Sell]'
+      @log << '[Do not Sell]'
     end
 
-    puts "End\n\n"
+    @log << "<<<<<<< End >>>>>>>\n"
+    puts @log
+
+    now = Time.new
+    if now.hour % 4 == 0 && now.min == 0
+     @line.notify_msg(@log)
+    end
   end
 
   def fetch_btc_price
@@ -59,7 +68,7 @@ class Order
     puts 'Buy'
     amount = @order_condition.buy_btc_amount
     if amount == 0
-      puts "BTC amount isn't enough"
+      @log << "BTC amount isn't enough"
       return 
     end
 
@@ -70,10 +79,10 @@ class Order
       price: @order_condition.buy_yen,
       type: 'limit' # 指値
     }
-    puts transaction
+    @log << transaction
 
     if IS_PRODUCTION
-      puts '[CREATE ORDER]'
+      @log << '[CREATE ORDER]'
       @client.create_order(
         transaction['pair'],
         transaction['amount'],
@@ -85,13 +94,14 @@ class Order
 
     @db_client.insert(:histories, transaction)
     @firestore_client.write_history(transaction)
+    @line.notify_msg(@log)
   end
 
   def sell
-    puts 'Sell'
+    @log << 'Sell'
     amount = @order_condition.sell_btc_amount
     if amount == 0
-      puts "BTC amount isn't enough"
+      @log << "BTC amount isn't enough"
       return 
     end
 
@@ -102,10 +112,10 @@ class Order
       price: @order_condition.sell_yen,
       type: 'limit' # 指値
     }
-    puts transaction
+    @log << transaction
 
     if IS_PRODUCTION
-      puts '[CREATE ORDER]'
+      @log << '[CREATE ORDER]'
       @client.create_order(
         transaction['pair'],
         transaction['amount'],
@@ -117,5 +127,6 @@ class Order
 
     @db_client.insert(:histories, transaction)
     @firestore_client.write_history(transaction)
+    @line.notify_msg(@log)
   end
 end

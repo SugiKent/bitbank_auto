@@ -8,9 +8,10 @@ class OrderCondition
   AMOUNT_YEN = 3000
   IS_PRODUCTION = ENV['IS_PRODUCTION'] == 'true' || false
 
-  def initialize(price, db_client, assets)
+  def initialize(price, db_client, assets, log)
     data = price['data']
-    puts "ticker: #{data}"
+    @log = log
+    @log << "ticker: #{data}"
     @sell_price = data['sell'].to_f
     @buy_price = data['buy'].to_f
     @last_price = data['last'].to_f
@@ -21,15 +22,15 @@ class OrderCondition
   end
 
   def buy?
-    puts "[Buy?] ================\n"
+    @log << "[Buy?] ================"
     return false if last_is_buy?
-    return true if Buyable.new.should_buy?(weekly_prices)
+    return true if Buyable.new.should_buy?(weekly_prices, @log)
   end
 
   def sell?
-    puts "[Sell?] ================\n"
+    @log << "[Sell?] ================"
     return false unless last_is_buy?
-    return true if Sellable.new.should_sell?(weekly_prices, @last_history, @sell_price)
+    return true if Sellable.new.should_sell?(weekly_prices, @last_history, @sell_price, @log)
   end
 
   def weekly_prices
@@ -38,13 +39,13 @@ class OrderCondition
 
   def last_history
     last = histories.first
-    puts "last_history: #{last}"
+    @log << "last_history: #{last.to_a}"
     last
   end
 
   def last_is_buy?
     last_is_buy = @last_history ? @last_history['side'] == 'buy' : false
-    puts "last is buy #{last_is_buy}"
+    @log << "last is buy #{last_is_buy}"
 
     last_is_buy
   end
