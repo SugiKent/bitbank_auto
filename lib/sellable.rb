@@ -7,16 +7,17 @@ class Sellable
 
   def should_sell?(weekly_prices, last_history, sell_price, log)
     @log = log
-    # 買ったときよりも高い値段で売る
+    # 買ったときよりも高い値段のときに検証する
     if last_history['price'] > sell_price
       @log << "last_history > sell_price: #{last_history['price']} > #{sell_price}"
-      return false
+      return true if check_regs(weekly_prices)
     end
-
-    return true if check_regs(weekly_prices)
 
     # 損切り
     return true if last_history['price'] < sell_price * 0.85
+
+    # 買ったときよりも高い値段で売る
+    return false
   end
 
   def check_regs(weekly_prices)
