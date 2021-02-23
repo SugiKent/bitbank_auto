@@ -14,7 +14,7 @@ class Sellable
     end
 
     # 損切り
-    return true if last_history['price'] < sell_price * 0.85
+    return true if last_history['price'] < sell_price * 0.95
 
     # 買ったときよりも高い値段で売る
     return false
