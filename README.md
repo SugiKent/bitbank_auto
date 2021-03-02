@@ -13,3 +13,14 @@ You can register cron syntax by using below command.
 `$ bundle exec whenever --update-crontab`
 
 
+# db 直接操作
+```
+> use bitbank_auto;
+switched to db bitbank_auto
+> db.histories.find({price: 5195197.006999999})
+{ "_id" : ObjectId("603e5d4aac07029f418d44e3"), "side" : "sell", "pair" : "btc_jpy", "amount" : 0.00058424, "price" : 5195197.006999999, "type" : "limit", "created_at" : ISODate("2021-03-02T15:44:10.130Z") }
+> db.histories.remove({price: 5195197.006999999})
+WriteResult({ "nRemoved" : 1 })
+```
+
+Firebase からも直接削除

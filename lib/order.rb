@@ -65,7 +65,7 @@ class Order
   end
 
   def buy
-    puts 'Buy'
+    puts '<<<< Buy >>>>'
     amount = @order_condition.buy_btc_amount
     if amount == 0
       @log << "BTC amount isn't enough"
@@ -98,7 +98,7 @@ class Order
   end
 
   def sell
-    @log << 'Sell'
+    @log << '<<<< Sell >>>>'
     amount = @order_condition.sell_btc_amount
     if amount == 0
       @log << "BTC amount isn't enough"
