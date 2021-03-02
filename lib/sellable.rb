@@ -8,7 +8,7 @@ class Sellable
   def should_sell?(weekly_prices, last_history, sell_price, log)
     @log = log
     # 買ったときよりも高い値段のときに検証する
-    if last_history['price'] > sell_price
+    if last_history['price'] < sell_price
       @log << "last_history > sell_price: #{last_history['price']} > #{sell_price}"
       return true if check_regs(weekly_prices)
     end
@@ -16,7 +16,6 @@ class Sellable
     # 損切り
     return true if last_history['price'] < sell_price * 0.95
 
-    # 買ったときよりも高い値段で売る
     return false
   end
 
@@ -24,10 +23,6 @@ class Sellable
     last_1hour = calc_reg(weekly_prices, 60, 'sell')
     last_1days = calc_reg(weekly_prices, 1440, 'sell')
     last_3days = calc_reg(weekly_prices, 4320, 'buy')
-
-    @log << "last_1hour: #{last_1hour}"
-    @log << "last_1days: #{last_1days}"
-    @log << "last_3days: #{last_3days}"
 
     compare_slope(small: last_3days, small_name: '3days', small_by: 2,
                   big: last_1days, big_name: '1days', big_by: 1) &&
