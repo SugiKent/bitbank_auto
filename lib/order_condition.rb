@@ -11,7 +11,6 @@ class OrderCondition
   def initialize(price, db_client, assets, log)
     data = price['data']
     @log = log
-    @log << "ticker: #{data}"
     @sell_price = data['sell'].to_f
     @buy_price = data['buy'].to_f
     @last_price = data['last'].to_f
@@ -23,12 +22,14 @@ class OrderCondition
 
   def buy?
     @log << "[Buy?] ================"
+    @log << "Buy Price: #{@buy_price}"
     return false if last_is_buy?
     return true if Buyable.new.should_buy?(weekly_prices, @log)
   end
 
   def sell?
     @log << "[Sell?] ================"
+    @log << "Sell Price: #{@sell_price}"
     return false unless last_is_buy?
     return true if Sellable.new.should_sell?(weekly_prices, @last_history, @sell_price, @log)
   end
