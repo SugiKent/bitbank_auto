@@ -25,6 +25,12 @@ class Sellable
     last_3days = calc_reg(weekly_prices, 4320, 'sell')
     last_5days = calc_reg(weekly_prices, 7200, 'sell')
 
+    # 1,3,5日移動平均が0以上なら売らない
+    if last_1days[:slope] > 0 && last_3days[:slope] > 0 && last_5days[:slope] > 0
+      @log << '1,3,5日移動平均が0以上なので売らない'
+      return false
+    end
+
     compare_slope(small: last_5days, small_name: '5days', small_by: -1,
                   big: last_3days, big_name: '3days', big_by: 1) &&
       compare_slope(small: last_3days, small_name: '3days', small_by: -2,
