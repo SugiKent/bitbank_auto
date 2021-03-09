@@ -33,9 +33,9 @@ class Sellable
 
     compare_slope(small: last_5days, small_name: '5days', small_by: -1,
                   big: last_3days, big_name: '3days', big_by: 1) &&
-      compare_slope(small: last_3days, small_name: '3days', small_by: -2,
+      compare_slope(small: last_3days, small_name: '3days', small_by: -1,
                     big: last_1days, big_name: '1days', big_by: 1) &&
-                   compare_slope(small: last_1hour, small_name: '1hour', small_by: -2.5,
+                   compare_slope(small: last_1hour, small_name: '1hour', small_by: 1,
                     big: last_1days, big_name: '1days', big_by: 1)
   end
 end
