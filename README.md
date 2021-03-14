@@ -24,3 +24,10 @@ WriteResult({ "nRemoved" : 1 })
 ```
 
 Firebase からも直接削除
+
+# test
+Mongodb にある tickers を使用して、ロジックの検証を行います
+
+`$ bundle exec ruby test /simulation.rb`
+
+
