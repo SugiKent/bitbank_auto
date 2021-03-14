@@ -34,11 +34,11 @@ const App = () => {
 
   const pl = useMemo(() => {
     return calcPl(histories);
-  }, [histories]);
+  }, [histories, calcPl]);
 
   const prdPl = useMemo(() => {
     return calcPl(histories.filter(h => h.is_production));
-  }, [histories]);
+  }, [histories, calcPl]);
 
   return (
     <>
