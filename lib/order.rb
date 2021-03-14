@@ -18,7 +18,7 @@ class Order
     @log << "[#{Time.new}] ===================="
     @client = Bitbankcc.new(KEY, SECRET)
     @order_condition = nil
-    @db_client = DB.new
+    @db_client = DB.new(is_production: IS_PRODUCTION)
     @firestore_client = FirestoreClient.new
     @assets = nil
     @line = Line.new
@@ -77,7 +77,8 @@ class Order
       pair: 'btc_jpy',
       amount: @order_condition.buy_btc_amount,
       price: @order_condition.buy_yen,
-      type: 'limit' # 指値
+      type: 'limit', # 指値
+      is_production: IS_PRODUCTION
     }
     @log << transaction
 
@@ -110,7 +111,8 @@ class Order
       pair: 'btc_jpy',
       amount: amount,
       price: @order_condition.sell_yen,
-      type: 'limit' # 指値
+      type: 'limit', # 指値
+      is_production: IS_PRODUCTION
     }
     @log << transaction
 
