@@ -56,7 +56,7 @@ class OrderCondition
   end
 
   def buy_yen
-    @buy_price * 0.999 # 300万なら 2,997,000
+    @buy_price * 0.9999 # 300万なら 2,999,700
   end
 
   def buy_btc_amount
@@ -65,7 +65,7 @@ class OrderCondition
   end
 
   def sell_yen
-    @sell_price * 1.001 # 300万なら 3,003,000
+    @sell_price * 1.0001 # 300万なら 3,000,300
   end
 
   def sell_btc_amount
