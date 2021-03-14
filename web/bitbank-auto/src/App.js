@@ -30,14 +30,22 @@ const App = () => {
     });
 
     return pl;
-  }, [])
+  }, []);
 
   const pl = useMemo(() => {
-    return calcPl(histories);
+    if (histories) {
+      return calcPl(histories);
+    } else {
+      return 0;
+    }
   }, [histories, calcPl]);
 
   const prdPl = useMemo(() => {
-    return calcPl(histories.filter(h => h.is_production));
+    if (histories) {
+      return calcPl(histories.filter((h) => h.is_production));
+    } else {
+      return 0;
+    }
   }, [histories, calcPl]);
 
   return (
