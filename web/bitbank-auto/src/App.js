@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import moment from "moment";
 
 import { fetchHistory } from "./firebaseAPI";
@@ -15,7 +15,7 @@ const App = () => {
     fetch();
   }, []);
 
-  const pl = useMemo(() => {
+  const calcPl = useCallback((histories) => {
     let pl = 0;
     if (!histories) {
       return pl;
@@ -30,10 +30,19 @@ const App = () => {
     });
 
     return pl;
+  }, [])
+
+  const pl = useMemo(() => {
+    return calcPl(histories);
+  }, [histories]);
+
+  const prdPl = useMemo(() => {
+    return calcPl(histories.filter(h => h.is_production));
   }, [histories]);
 
   return (
     <>
+      <p>本番損益 {prdPl}円</p>
       <p>損益 {pl}円</p>
       <table>
         <thead>
@@ -42,6 +51,7 @@ const App = () => {
             <th>Side</th>
             <th>Price</th>
             <th>Amount</th>
+            <th>Is Production</th>
           </tr>
         </thead>
         {histories && (
@@ -55,6 +65,7 @@ const App = () => {
                   <td>{history.side}</td>
                   <td>{history.price}</td>
                   <td>{history.amount}</td>
+                  <td>{history.is_production}</td>
                 </tr>
               );
             })}
