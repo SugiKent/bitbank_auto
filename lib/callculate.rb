@@ -22,9 +22,9 @@ module Callculate
   # 任意の count の reg
   # 1 count は概ね 1 分
   def calc_reg(weekly_prices, count, type)
-    # weekly_prices は created_at で昇順で渡ってくる
-    # 10_080 件取得しているため、一旦降順にして先頭（最も直近）から取得して、再度昇順に戻す
-    data = weekly_prices.reverse[0..(count - 1)].reverse
+    # weekly_prices は created_at で降順で渡ってくる
+    # 先頭（最も直近）から取得する
+    data = weekly_prices[0..(count - 1)]
     prices = data.map { |price| price[type]&.to_f }.compact
     reg_line(prices.count, prices)
   end

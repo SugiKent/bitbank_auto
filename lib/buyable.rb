@@ -11,12 +11,13 @@ class Buyable
   end
 
   def check_regs(weekly_prices)
-    last_1hour = calc_reg(weekly_prices, 60, 'buy')
-    last_1days = calc_reg(weekly_prices, 1440, 'buy')
-    last_3days = calc_reg(weekly_prices, 4320, 'buy')
+    last_1hour = calc_reg(weekly_prices, 60, :buy)
+    last_1days = calc_reg(weekly_prices, 1440, :buy)
+    last_3days = calc_reg(weekly_prices, 4320, :buy)
 
     # 3日移動平均が0以上なら買わない
     if last_3days[:slope] > 0
+      @log << last_3days
       @log << '3日移動平均が0以上なので買わない'
       return false
     end

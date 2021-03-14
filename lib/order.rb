@@ -53,15 +53,15 @@ class Order
 
   def fetch_btc_price
     res = @client.read_ticker('btc_jpy')
-    price = JSON.parse(res.body)
-    @db_client.insert(:tickers, price['data'])
+    price = JSON.parse(res.body, symbolize_names: true)
+    @db_client.insert(:tickers, price[:data])
 
     price
   end
 
   def fetch_assets
     res = @client.read_balance
-    JSON.parse(res)
+    JSON.parse(res, symbolize_names: true)
   end
 
   def buy
