@@ -23,7 +23,7 @@ class OrderConditionTest < OrderCondition
   def weekly_prices
     # @tickers の中は今→昔
     # reverse することで昔→今にする
-    # current_index は昔→今におけるindexなので、先頭~そのindexまでを取得する
+    # current_index は昔→今におけるindexなので、昔~そのindexまでを取得する
     # そして再度、今→昔にする
     first_index = (@current_index - 10800 - 1) > 0 ? (@current_index - 10800 - 1) : 0
     @tickers.reverse[first_index..(@current_index - 1)].reverse
