@@ -23,9 +23,9 @@ class Buyable
     end
 
     compare_slope(small: last_3days, small_name: '3days', small_by: -0.8,
-                  big: last_1days, big_name: '1days', big_by: 1) &&
+                  big: last_1days, big_name: '1days', big_by: 1.3) &&
                  compare_slope(small: last_3days, small_name: '3days', small_by: -1.5,
-                  big: last_1hour, big_name: '1hour', big_by: 1) &&
+                               big: last_1hour, big_name: '1hour', big_by: 1.4) &&
                  compare_slope(small: last_1days, small_name: '1days', small_by: 1.2,
                     big: last_1hour, big_name: '1hour', big_by: 1)
   end
