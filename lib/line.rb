@@ -8,7 +8,8 @@ class Line
   end
 
   def notify_msg(msg)
-    request = make_request(msg.join("\n"))
+    formated_message = msg.class == Array ? msg.join("\n") : msg
+    request = make_request(formated_message)
     response = Net::HTTP.start(@uri.hostname, @uri.port, use_ssl: @uri.scheme == "https") do |https|
       https.request(request)
     end

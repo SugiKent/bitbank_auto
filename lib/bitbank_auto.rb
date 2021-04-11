@@ -7,5 +7,6 @@ line = Line.new
 begin
   Order.new.execute!
 rescue => e
-  line.notify_msg(e)
+  puts e
+  line.notify_msg(e.message)
 end
