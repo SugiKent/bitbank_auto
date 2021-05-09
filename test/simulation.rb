@@ -93,9 +93,9 @@ end
 value = 3000
 results.each do |r|
   if r[:side] == 'buy'
-    value = value - r[:price].to_i
+    value = value - r[:price].to_i * r[:amount]
   else
-    value = value + r[:price].to_i
+    value = value + r[:price].to_i * r[:amount]
   end
 end
 

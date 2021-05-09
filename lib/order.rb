@@ -19,7 +19,6 @@ class Order
     @client = Bitbankcc.new(KEY, SECRET)
     @order_condition = nil
     @db_client = DB.new(is_production: IS_PRODUCTION)
-    @firestore_client = FirestoreClient.new
     @assets = nil
     @line = Line.new
   end
@@ -65,6 +64,7 @@ class Order
   end
 
   def buy
+    @firestore_client = FirestoreClient.new
     @log << '<<<< Buy >>>>'
     amount = @order_condition.buy_btc_amount
     if amount == 0
@@ -84,13 +84,15 @@ class Order
 
     if IS_PRODUCTION
       @log << '[CREATE ORDER]'
-      @client.create_order(
-        transaction['pair'],
-        transaction['amount'],
-        transaction['price'],
-        transaction['side'],
-        transaction['type']
+      res = @client.create_order(
+        transaction[:pair],
+        transaction[:amount],
+        transaction[:price],
+        transaction[:side],
+        transaction[:type],
+        false
       )
+      @log << res
     end
 
     @db_client.insert(:histories, transaction)
@@ -99,6 +101,7 @@ class Order
   end
 
   def sell
+    @firestore_client = FirestoreClient.new
     @log << '<<<< Sell >>>>'
     amount = @order_condition.sell_btc_amount
     if amount == 0
@@ -118,13 +121,15 @@ class Order
 
     if IS_PRODUCTION
       @log << '[CREATE ORDER]'
-      @client.create_order(
-        transaction['pair'],
-        transaction['amount'],
-        transaction['price'],
-        transaction['side'],
-        transaction['type']
+      res = @client.create_order(
+        transaction[:pair],
+        transaction[:amount],
+        transaction[:price],
+        transaction[:side],
+        transaction[:type],
+        false
       )
+      @log << res
     end
 
     @db_client.insert(:histories, transaction)
